@@ -1,0 +1,43 @@
+// solution1
+class Solution {
+public:
+    vector<int> res;
+    vector<int> diffWaysToCompute(string input) {
+        stack<int> nums;
+        stack<char> op;
+        dfs(input, 0, nums, op);
+        return res;
+    }
+    void dfs(string input, int k, stack<int> nums, stack<char> op){
+        if(k == input.size()){
+            while(op.size()) calc(nums,op);
+            res.push_back(nums.top());
+            return;
+        }
+        if(input[k] == '+' || input[k] == '-' || input[k] == '*'){
+            op.push(input[k]);
+            k++;
+        }    
+        int x = 0;
+        while(k < input.size() && input[k] <= '9' && input[k] >= '0')
+            x = x * 10 + (input[k++] - '0');
+        nums.push(x);
+
+        dfs(input, k, nums, op);
+        
+        while(nums.size() > 1 && k != input.size()){
+            calc(nums, op);
+            dfs(input, k, nums, op);
+        }
+    }
+    void calc(stack<int>& nums, stack<char> &op){
+        int y = nums.top();
+        nums.pop();
+        int x = nums. top();
+        nums.pop();
+        if(op.top() == '+') nums.push(x + y);
+        else if(op.top() == '-') nums.push(x - y);
+        else nums.push(x * y);
+        op.pop();
+    }
+};
